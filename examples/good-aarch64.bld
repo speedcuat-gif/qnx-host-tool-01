@@ -1,0 +1,26 @@
+# good board image — aarch64le, raw format.
+# this is what a healthy QNX 8.0 buildfile looks like.
+# flash it, it boots. run bootcheck on it, it stays quiet.
+
+[virtual=aarch64le,raw] .bootstrap = {
+    startup-bsp
+    PATH=/proc/boot procnto -vv
+}
+
+[+script] .script = {
+    procmgr_symlink ../../proc/boot/libc.so.2 /usr/lib/ldqnx.so.2
+    devc-ser8250 -e -b115200 0x09000000^1,33 &
+    waitfor /dev/ser1
+    reopen /dev/ser1
+    display_msg Serial console up
+    [+session] PATH=:/proc/boot:/bin esh
+}
+
+[type=link] /dev/console=/dev/ser1
+[type=link] /tmp=/dev/shmem
+[type=link] /usr/lib/ldqnx.so.2=/proc/boot/libc.so.2
+[uid=0 gid=0 perms=0755] libc.so.2
+devc-ser8250
+esh
+ls
+cat

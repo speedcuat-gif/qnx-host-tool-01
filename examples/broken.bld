@@ -1,0 +1,26 @@
+# busted buildfile — every line here is a mistake bootcheck catches.
+# do not flash this to a board. seriously.
+
+[uidd=0] libc.so.2
+[uid=5] [gid=5] esh
+[] ls
+[type=link] /dev/console
+[type=lnk] /dev/null=/dev/zero
+[uid=root] cat
+[perms=999] ping
+[data=copy] ftp
+[+script] ls
+ls# sneaky comment with no space
+devc-not-a-real-driver
+.bootstrap = {
+    startup-bsp
+}
+.script = { display_msg hi
+    devc-ser8250 &
+}
+[+script] .script = {
+    devc-ser8250 -e -b115200 0x09000000^1,33 &
+    reopen /dev/ser1
+}
+[+raw] /proc/boot/note={
+    this file never closes

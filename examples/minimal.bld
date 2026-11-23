@@ -1,0 +1,9 @@
+# smallest image that still boots. nothing extra, nothing missing.
+[virtual=x86_64,raw] .bootstrap = {
+    startup-bsp
+    PATH=/proc/boot procnto
+}
+[+script] .script = {
+    reopen
+    [+session] esh
+}
